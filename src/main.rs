@@ -5,6 +5,7 @@ extern crate clap;
 use clap::{Arg, App};
 use std::fs::File;
 use std::io::{BufReader, BufRead, Error};
+use std::collections::HashMap;
 
 fn main() -> Result<(), Error> {
     let mut filename_vector = Vec::new();
@@ -62,6 +63,8 @@ fn main() -> Result<(), Error> {
 
 // https://www.tutorialspoint.com/rust/rust_string.htm
 fn split_lines(f: String, d: String, c: usize) -> Result<(), Error> {
+    let mut map: HashMap<String, i32> = HashMap::new();
+
     println!("delimiter: {}", d);
     println!("column: {:?}", c);
     let _f = f.clone();
@@ -73,7 +76,9 @@ fn split_lines(f: String, d: String, c: usize) -> Result<(), Error> {
                 let s = line.unwrap().to_string();
                 let tokens:Vec<&str> =  s.split(&d).collect();
                 if tokens.len() > c {
-                    println!("{}", tokens[c]);
+//                    println!("{}", tokens[c]);
+                    let count = map.entry(tokens[c].to_string()).or_insert(0);
+                    *count += 1;
                 }
             }
         },
@@ -81,6 +86,10 @@ fn split_lines(f: String, d: String, c: usize) -> Result<(), Error> {
             println!("file not found: {}", _f)
         }
     };
+
+    for (orgnr, antal) in map.iter() {
+        println!("{}, {}", orgnr, antal);
+    }
 
     Ok(())
 }
