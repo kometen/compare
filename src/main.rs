@@ -55,14 +55,17 @@ fn main() -> Result<(), Error> {
 
     for filename in filename_vector {
         println!("Input file: {}", filename);
-        let _result = split_lines(filename.to_string(), delimiter.to_string(), column);
+        let (_result, m) = split_lines(filename.to_string(), delimiter.to_string(), column);
+        for (orgnr, antal) in m.iter() {
+            println!("{}, {}", orgnr, antal);
+        }
     }
 
     Ok(())
 }
 
 // https://www.tutorialspoint.com/rust/rust_string.htm
-fn split_lines(f: String, d: String, c: usize) -> Result<(), Error> {
+fn split_lines(f: String, d: String, c: usize) -> (Result<(), Error>, HashMap<String, i32>) {
     let mut map: HashMap<String, i32> = HashMap::new();
 
     println!("delimiter: {}", d);
@@ -76,7 +79,6 @@ fn split_lines(f: String, d: String, c: usize) -> Result<(), Error> {
                 let s = line.unwrap().to_string();
                 let tokens:Vec<&str> =  s.split(&d).collect();
                 if tokens.len() > c {
-//                    println!("{}", tokens[c]);
                     let count = map.entry(tokens[c].to_string()).or_insert(0);
                     *count += 1;
                 }
@@ -87,9 +89,5 @@ fn split_lines(f: String, d: String, c: usize) -> Result<(), Error> {
         }
     };
 
-    for (orgnr, antal) in map.iter() {
-        println!("{}, {}", orgnr, antal);
-    }
-
-    Ok(())
+    (Ok(()), map)
 }
