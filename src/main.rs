@@ -8,6 +8,7 @@ use std::io::{BufReader, BufRead, Error};
 use std::collections::HashMap;
 
 fn main() -> Result<(), Error> {
+    let mut map: HashMap<String, i32> = HashMap::new();
     let mut filename_vector = Vec::new();
 
     // Command line parameters.
@@ -37,6 +38,14 @@ fn main() -> Result<(), Error> {
             .short("c")
             .multiple(false)
         )
+        .arg(Arg::with_name("operation")
+            .help("[i] intersection (in all sets) or [s] symmetric difference (only in one set)")
+            .required(true)
+            .takes_value(true)
+            .short("o")
+            .multiple(false)
+            .possible_values(&["i", "s"])
+        )
         .get_matches();
     
     // Put filename(s) in vector.
@@ -53,11 +62,33 @@ fn main() -> Result<(), Error> {
         Err(_e) => { 0 }
     };
 
+    let operation: String;
+    match matches.value_of("operation").unwrap() {
+        "i" => {
+            operation = "i".to_string()
+        }
+        "s" => {
+            operation = "s".to_string()
+        }
+        _ => unreachable!(),
+    }
+
+    let mut index: i32 = 0;
     for filename in filename_vector {
-        println!("Input file: {}", filename);
+        index += 1;
+//        println!("Input file: {}", filename);
         let (_result, m) = split_lines(filename.to_string(), delimiter.to_string(), column);
-        for (orgnr, antal) in m.iter() {
-            println!("{}, {}", orgnr, antal);
+        for (key, _value) in m.iter() {
+            let count = map.entry(key.to_string()).or_insert(0);
+            *count += 1;
+        }
+    }
+
+    for (key, value) in map.iter() {
+        // Only in one set.
+        if operation == "s" { index = 1; }
+        if value == &index {
+            println!("{}", key);
         }
     }
 
@@ -68,8 +99,8 @@ fn main() -> Result<(), Error> {
 fn split_lines(f: String, d: String, c: usize) -> (Result<(), Error>, HashMap<String, i32>) {
     let mut map: HashMap<String, i32> = HashMap::new();
 
-    println!("delimiter: {}", d);
-    println!("column: {:?}", c);
+//    println!("delimiter: {}", d);
+//    println!("column: {:?}", c);
     let _f = f.clone();
     let input_file = File::open(f);
     let _ = match input_file {
@@ -79,8 +110,7 @@ fn split_lines(f: String, d: String, c: usize) -> (Result<(), Error>, HashMap<St
                 let s = line.unwrap().to_string();
                 let tokens:Vec<&str> =  s.split(&d).collect();
                 if tokens.len() > c {
-                    let count = map.entry(tokens[c].to_string()).or_insert(0);
-                    *count += 1;
+                    map.entry(tokens[c].to_string()).or_insert(1);
                 }
             }
         },
