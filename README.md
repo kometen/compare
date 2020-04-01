@@ -12,3 +12,5 @@ Example where delimiter is semicolon (;), column is three (3) and operation is
 intersection (i).
 
 $ compare -f 10.csv -f 11.csv -d ';' -c 3 -o i
+
+To build it use 'cargo build' or 'cargo build --release'.
