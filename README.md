@@ -11,29 +11,29 @@ it can do some work.
 Example where delimiter is semicolon (;), column is two (2) and operation is
 first intersection (i) and secondly symmetric difference (s).
 
-$ cat a.csv
-1;a;one
-2;b;two
-3;c;three
-4;d;four
-5;e;five
+$ cat a.csv  
+1;a;one  
+2;b;two  
+3;c;three  
+4;d;four  
+5;e;five  
 
-$ cat b.csv 
-3;c;three
-4;d;four
-5;e;five
-6;f;six
-7;g;seven
+$ cat b.csv   
+3;c;three  
+4;d;four  
+5;e;five  
+6;f;six  
+7;g;seven  
 
-$ compare -f a.csv -f b.csv -d ';' -c 2 -o i
-five
-four
-three
+$ compare -f a.csv -f b.csv -d ';' -c 2 -o i  
+five  
+four  
+three  
 
-$ compare -f a.csv -f b.csv -d ';' -c 2 -o s
-one
-six
-seven
-two
+$ compare -f a.csv -f b.csv -d ';' -c 2 -o s  
+one  
+six  
+seven  
+two  
 
 To build it use 'cargo build' or 'cargo build --release'.
