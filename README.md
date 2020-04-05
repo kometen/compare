@@ -37,9 +37,10 @@ seven
 two  
 
 
+
 Can use three or more files for comparison.
 
-cat c.csv  
+$ cat c.csv  
 5;e;five  
 6;f;six  
 7;g;seven  
