@@ -36,4 +36,17 @@ six
 seven  
 two  
 
+
+Can use three or more files for comparison.
+
+cat c.csv  
+5;e;five  
+6;f;six  
+7;g;seven  
+8;h;eight  
+9;i;nine  
+
+$ compare -f a.csv -f b.csv -f c.csv -d ';' -c 2 -o i  
+five  
+
 To build it use 'cargo build' or 'cargo build --release'.
